@@ -15,7 +15,7 @@ public class HtmlParser {
         Parser parser;
         try {
             parser = new Parser(url);
-            parser.setEncoding("UTF-8");
+            parser.setEncoding("GB2312");
             return parser.extractAllNodesThatMatch(filter);
         } catch (ParserException e) {
             throw e;

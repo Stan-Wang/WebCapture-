@@ -16,8 +16,8 @@ public class TaskManager {
         executorService = Executors.newFixedThreadPool(MAX_THREAD_COUNT);
     }
 
-    public void runTask(Runnable runnable){
-        executorService.submit(runnable);
+    public Future<String> runTask(Callable runnable){
+        return executorService.submit(runnable);
     }
 
 }
