@@ -11,14 +11,11 @@ import org.htmlparser.util.NodeList;
  */
 public class HtmlParser {
 
+    public static final String DEFAULT_ENCODE = "GB2312";
+
     public static NodeList getNodeList(String url , NodeFilter filter) throws ParserException {
         Parser parser;
-        try {
-            parser = new Parser(url);
-            parser.setEncoding("GB2312");
-            return parser.extractAllNodesThatMatch(filter);
-        } catch (ParserException e) {
-            throw e;
-        }
+        parser = Parser.createParser(url,DEFAULT_ENCODE);
+        return parser.extractAllNodesThatMatch(filter);
     }
 }
