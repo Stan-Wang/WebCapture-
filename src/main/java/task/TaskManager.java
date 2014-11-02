@@ -10,13 +10,14 @@ import java.util.concurrent.*;
 public class TaskManager {
 
     public static final int MAX_THREAD_COUNT = 5;
+    
     private ExecutorService executorService;
 
     public TaskManager(){
         executorService = Executors.newFixedThreadPool(MAX_THREAD_COUNT);
     }
 
-    public Future<String> runTask(Callable runnable){
+    public Future<String> runTask(Callable<String> runnable){
         return executorService.submit(runnable);
     }
 

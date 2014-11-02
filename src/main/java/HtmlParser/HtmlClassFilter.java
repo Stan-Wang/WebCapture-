@@ -12,7 +12,10 @@ import java.util.regex.Pattern;
  * Created by STAN_WANG on 14-10-30.
  */
 public class HtmlClassFilter implements NodeFilter {
-    private String class_name = "";
+	
+	private static final long serialVersionUID = 1498619952179148590L;
+	
+	private String class_name = "";
 
     public HtmlClassFilter(String class_name) {
         this.class_name = class_name;
