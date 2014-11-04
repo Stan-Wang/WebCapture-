@@ -32,7 +32,7 @@ public class HtmlPaserJob implements Callable<String> {
         StringBuilder sb = new StringBuilder();
 
         NodeList rt = getNodeList(url,filter);
-
+        
         for (Node node : rt.toNodeArray()) {
             sb.append(node.toPlainTextString());
             sb.append("\n");
