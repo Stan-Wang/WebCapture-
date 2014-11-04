@@ -5,11 +5,14 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
+import org.apache.log4j.Logger;
 import org.htmlparser.NodeFilter;
 
 import task.TaskManager;
 
 public class MutipleJob implements Callable<String> {
+	
+	private Logger log = Logger.getLogger(MutipleJob.class);
 
 	private String urlmode;
 	private int task_count;
@@ -26,12 +29,15 @@ public class MutipleJob implements Callable<String> {
 		this.task_count = task_count;
 		this.filter = filter;
 		this.manager = manager;
+		
+		log.debug("MutipleJob init ==> " + this.toString());
 	}
 
 	@Override
 	public String call() throws Exception {
 
 		if (task_count == 0) {
+			log.error("task_count is 0");
 			return "task_count is 0";
 		}
 
@@ -44,13 +50,9 @@ public class MutipleJob implements Callable<String> {
 		
 		StringBuilder  sb = new StringBuilder();
 		
-//		for(Future<String> f : resualt){
-//			sb.append(f.get());
-//			sb.append("\n");
-//		}
 		
 		for(int i = 0; i<resualt.size();i++){
-			Future r = resualt.get(i);
+			Future<String> r = resualt.get(i);
 			boolean flag = true;
 			while(flag){
 				if(r.isDone()){
@@ -65,6 +67,11 @@ public class MutipleJob implements Callable<String> {
 		}
 
 		return sb.toString();
+	}
+	
+	@Override
+	public String toString(){
+		return "MutipleJob :"+urlmode + "_" +task_count +"_"+filter.toString();
 	}
 
 }

@@ -33,4 +33,9 @@ public class HtmlClassFilter implements NodeFilter {
     public boolean accept(Node node) {
         return getStringsByRegex(node.getText());
     }
+    
+    @Override
+	public String toString(){
+		return "HtmlClassFilter 【" +class_name+"】";
+	}
 }

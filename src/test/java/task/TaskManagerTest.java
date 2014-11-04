@@ -5,11 +5,9 @@ import org.junit.Test;
 
 public class TaskManagerTest {
 
-    private TaskManager taskManager;
-
     @Before
     public void init(){
-        taskManager = new TaskManager();
+        new TaskManager();
     }
 
     @Test

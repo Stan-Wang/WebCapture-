@@ -1,5 +1,6 @@
 package task.job;
 
+import org.apache.log4j.Logger;
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.util.NodeList;
@@ -16,6 +17,8 @@ import static HtmlParser.HtmlParser.getNodeList;
  * 创建时间： 14-10-30.
  */
 public class HtmlPaserJob implements Callable<String> {
+	
+	private Logger log = Logger.getLogger(HtmlPaserJob.class);
 
     private String url;
     private NodeFilter filter;
@@ -29,6 +32,7 @@ public class HtmlPaserJob implements Callable<String> {
     @Override
     public String call() throws Exception {
 
+    	log.debug("HtmlPaserJob <"+url+"> start running...");
         StringBuilder sb = new StringBuilder();
 
         NodeList rt = getNodeList(url,filter);
@@ -37,7 +41,7 @@ public class HtmlPaserJob implements Callable<String> {
             sb.append(node.toPlainTextString());
             sb.append("\n");
         }
-
+        log.debug("HtmlPaserJob <"+url+"> start end...");
         return sb.toString();
     }
 

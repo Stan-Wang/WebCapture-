@@ -16,6 +16,7 @@ public class HtmlParser {
 
 	public static final String DEFAULT_ENCODE = "GB2312";
 	
+//	private Logger log = Logger.getLogger(HtmlParser.class);
 
 	public static NodeList getNodeList(String url, NodeFilter filter)
 			throws ParserException {
