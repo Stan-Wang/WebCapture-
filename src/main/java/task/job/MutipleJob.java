@@ -12,6 +12,8 @@ import task.TaskManager;
 
 public class MutipleJob implements Callable<String> {
 	
+	private static final int STOP_TIME = 500;
+
 	private Logger log = Logger.getLogger(MutipleJob.class);
 
 	private String urlmode;
@@ -61,7 +63,7 @@ public class MutipleJob implements Callable<String> {
 					System.out.println(i+" is Done");
 					flag = false;
 				}else{
-					Thread.sleep(300);
+					Thread.sleep(STOP_TIME);
 				}
 			}
 		}

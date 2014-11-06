@@ -12,37 +12,35 @@ import static HtmlParser.HtmlParser.getNodeList;
 /**
  * 此Task处理单个Url指定filter的内容
  * <p/>
- * PACKAGE_NAME： task.job
- * 作者：  Satan
- * 创建时间： 14-10-30.
+ * PACKAGE_NAME： task.job 作者： Satan 创建时间： 14-10-30.
  */
 public class HtmlPaserJob implements Callable<String> {
-	
+
 	private Logger log = Logger.getLogger(HtmlPaserJob.class);
 
-    private String url;
-    private NodeFilter filter;
+	private String url;
+	private NodeFilter filter;
 
-    public HtmlPaserJob(String url, NodeFilter filter) {
-        this.url = url;
-        this.filter = filter;
-    }
+	public HtmlPaserJob(String url, NodeFilter filter) {
+		this.url = url;
+		this.filter = filter;
+	}
 
+	@Override
+	public String call() throws Exception {
+		log.debug("HtmlPaserJob <" + url + "> start running...");
 
-    @Override
-    public String call() throws Exception {
+		NodeList rt = getNodeList(url, filter);
 
-    	log.debug("HtmlPaserJob <"+url+"> start running...");
-        StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 
-        NodeList rt = getNodeList(url,filter);
-        
-        for (Node node : rt.toNodeArray()) {
-            sb.append(node.toPlainTextString());
-            sb.append("\n");
-        }
-        log.debug("HtmlPaserJob <"+url+"> start end...");
-        return sb.toString();
-    }
+		for (Node node : rt.toNodeArray()) {
+			sb.append(node.toPlainTextString());
+			sb.append("\n");
+		}
+
+		log.debug("HtmlPaserJob <" + url + "> start end...");
+		return sb.toString();
+	}
 
 }
