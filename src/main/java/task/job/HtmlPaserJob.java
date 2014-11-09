@@ -39,7 +39,7 @@ public class HtmlPaserJob implements Callable<String> {
 			sb.append("\n");
 		}
 
-		log.debug("HtmlPaserJob <" + url + "> start end...");
+		log.debug("HtmlPaserJob <" + url + "> done...");
 		return sb.toString();
 	}
 
