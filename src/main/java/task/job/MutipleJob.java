@@ -16,118 +16,114 @@ import task.TaskManager;
 
 public class MutipleJob implements Callable<String> {
 
-	private static final long WAITTIME = 10L;
+    private static final long WAITTIME = 10L;
 
-	private static final int STOP_TIME = 500;
+    private static final int STOP_TIME = 500;
 
-	private Logger log = Logger.getLogger(MutipleJob.class);
+    private static final String mark = "$";
 
-	private String urlmode;
-	private int task_count;
-	private NodeFilter filter;
-	private TaskManager manager;
+    private Logger log = Logger.getLogger(MutipleJob.class);
 
-	private List<Future<String>> resualt;
+    private String urlmode;
+    private int task_count;
+    private NodeFilter filter;
+    private TaskManager manager;
 
-	/*
-	 * 此列表用来存储结果
-	 */
-	private String[] tempResualt;
 
-	/*
-	 * 此列表存储未完成的任务
-	 */
-	private LinkedList<Integer> tempUnDoneList;
+    public MutipleJob(String urlmode, int task_count, NodeFilter filter,
+                      TaskManager manager) {
+        this.urlmode = urlmode;
+        this.task_count = task_count;
+        this.filter = filter;
+        this.manager = manager;
 
-	private static String mark = "$";
+        log.debug("MutipleJob init ==> " + this.toString());
+    }
 
-	public MutipleJob(String urlmode, int task_count, NodeFilter filter,
-			TaskManager manager) {
-		this.urlmode = urlmode;
-		this.task_count = task_count;
-		this.filter = filter;
-		this.manager = manager;
+    @Override
+    public String call() throws Exception {
 
-		log.debug("MutipleJob init ==> " + this.toString());
-	}
+        if (task_count == 0) {
+            log.error("task_count is 0");
+            return "task_count is 0";
+        }
 
-	@Override
-	public String call() throws Exception {
+        List<Future<String>> resualt = new LinkedList<Future<String>>();
 
-		if (task_count == 0) {
-			log.error("task_count is 0");
-			return "task_count is 0";
-		}
+         /*
+         * 此列表用来存储结果
+         */
+        String[] tempResualt = new String[task_count];
 
-		resualt = new LinkedList<Future<String>>();
+        /*
+         * 此列表存储未完成的任务
+         */
+        LinkedList<Integer> tempUnDoneList = new LinkedList<Integer>();
 
-		tempResualt = new String[task_count];
 
-		tempUnDoneList = new LinkedList<>();
 
-		for (int i = 1; i <= task_count; i++) {
-			resualt.add(manager.runTask(new HtmlPaserJob(urlmode.replace(mark,
-					String.valueOf(i)), filter)));
-			tempUnDoneList.add(i - 1);
-		}
+        for (int i = 1; i <= task_count; i++) {
+            resualt.add(manager.runTask(new HtmlPaserJob(urlmode.replace(mark,
+                    String.valueOf(i)), filter)));
+            tempUnDoneList.add(i - 1);
+        }
 
-		while (true) {
+        while (true) {
 
-			Iterator<Integer> iterator = tempUnDoneList.iterator();
+            Iterator<Integer> iterator = tempUnDoneList.iterator();
 
-			while (iterator.hasNext()) {
-				int index = iterator.next();
-				Future<String> r = resualt.get(index);
+            while (iterator.hasNext()) {
+                int index = iterator.next();
+                Future<String> r = resualt.get(index);
 
-				String chapter = null;
-				try {
-					chapter = r.get(WAITTIME, TimeUnit.SECONDS);
-				} catch (TimeoutException e) { // 此处处理超过WAITTIME仍未获取到结果的情况
-					// 停止任务
-					r.cancel(true);
-					// 重新添加任务
-					resualt.set(index, manager.runTask(new HtmlPaserJob(urlmode
-							.replace(mark, String.valueOf(index)), filter)));
-					log.error("task [" + index + "] time out ,run again...");
-					continue;
-				}
+                String chapter = null;
+                try {
+                    chapter = r.get(WAITTIME, TimeUnit.SECONDS);
+                } catch (TimeoutException e) { // 此处处理超过WAITTIME仍未获取到结果的情况
+                    // 停止任务
+                    r.cancel(true);
+                    // 重新添加任务
+                    resualt.set(index, manager.runTask(new HtmlPaserJob(urlmode
+                            .replace(mark, String.valueOf(index)), filter)));
+                    log.error("task [" + index + "] time out ,run again...");
+                    continue;
+                }
 
-				if (chapter != null) {
-					// 放置入结果缓存中
-					tempResualt[index] = chapter.replaceAll("&nbsp;", " ");
-					// 从待处理列表中删除
-					iterator.remove();
+                if (chapter != null) {
+                    // 放置入结果缓存中
+                    tempResualt[index] = chapter.replaceAll("&nbsp;", " ");
+                    // 从待处理列表中删除
+                    iterator.remove();
 
-					log.info("task [" + index + "] is Done...");
-				}
+                    log.info("task [" + index + "] is Done...");
+                }
 
-			}
+            }
 
-			if (tempUnDoneList.size() == 0) {
-				break;
-			} else if(!iterator.hasNext()){
-				log.error("iterator hasnext is null ==> "+tempUnDoneList.toString());
-				continue;
-			}else{
-				log.error("task left 【" + tempUnDoneList.size()
-						+ "】 run again...");
-			}
-		}
+            if (tempUnDoneList.size() == 0) {
+                break;
+            } else if (!iterator.hasNext()) {
+                log.error("iterator hasnext is null ==> " + tempUnDoneList.toString());
+            } else {
+                log.error("task left 【" + tempUnDoneList.size()
+                        + "】 run again...");
+            }
+        }
 
-		StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
-		for (String s : tempResualt) {
-			sb.append(s);
-			sb.append("\n");
-		}
+        for (String s : tempResualt) {
+            sb.append(s);
+            sb.append("\n");
+        }
 
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 
-	@Override
-	public String toString() {
-		return "MutipleJob :" + urlmode + "_" + task_count + "_"
-				+ filter.toString();
-	}
+    @Override
+    public String toString() {
+        return "MutipleJob :" + urlmode + "_" + task_count + "_"
+                + filter.toString();
+    }
 
 }

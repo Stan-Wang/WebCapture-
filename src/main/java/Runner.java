@@ -82,10 +82,6 @@ public class Runner {
 	}
 
 	public static boolean isNumeric(String str) {
-		if (str.matches("\\d*")) {
-			return true;
-		} else {
-			return false;
-		}
+        return str.matches("\\d*");
 	}
 }
