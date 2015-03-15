@@ -12,12 +12,12 @@ public class HtmlParserTest {
 	@Test
 	public void testGetNodeList() throws Exception {
 
-		System.setProperty("http.proxyHost", "127.0.0.1");
-		System.setProperty("http.proxyPort", "8087");
+//		System.setProperty("http.proxyHost", "127.0.0.1");
+//		System.setProperty("http.proxyPort", "8087");
 
 		NodeList rt = getNodeList(
-				"http://184.154.128.244/htm_data/20/1411/1261982.html",
-				new HtmlClassFilter("tpc_content"));
+				"http://m.58.com/zz/hezu/18710994264714x.shtml",
+				new HtmlClassFilter("*"));
 
 		for (Node node : rt.toNodeArray()) {
 			System.out.println(node.toPlainTextString());

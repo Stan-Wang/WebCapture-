@@ -14,7 +14,7 @@ import org.htmlparser.util.NodeList;
  */
 public class HtmlParser {
 
-	public static final String DEFAULT_ENCODE = "GB2312";
+	public static final String DEFAULT_ENCODE = "utf-8";
 	
 //	private Logger log = Logger.getLogger(HtmlParser.class);
 
