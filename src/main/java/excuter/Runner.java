@@ -1,3 +1,5 @@
+package excuter;
+
 import HtmlParser.HtmlClassFilter;
 import task.TaskManager;
 import task.job.MutipleJob;
@@ -18,6 +20,8 @@ import org.apache.log4j.Logger;
  */
 public class Runner {
 
+	private static final String NUMFLAG = "\\d*";
+	
 	static Logger log = Logger.getLogger(Runner.class);
 
 	public static void main(String args[]) {
@@ -57,14 +61,12 @@ public class Runner {
 
 		TaskManager taskManager = new TaskManager();
 
-		MutipleJob job = new MutipleJob(url, count, new HtmlClassFilter(
-				"tpc_content"), taskManager);
+		MutipleJob job = new MutipleJob(url, count, new HtmlClassFilter("tpc_content"), taskManager);
 
 		Future<String> res = taskManager.runTask(job);
 
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
-					url.hashCode() + ".txt")));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(url.hashCode() + ".txt")));
 			writer.write(res.get());
 			writer.close();
 		} catch (Exception e) {
@@ -82,6 +84,6 @@ public class Runner {
 	}
 
 	public static boolean isNumeric(String str) {
-        return str.matches("\\d*");
+		return str.matches(NUMFLAG);
 	}
 }
