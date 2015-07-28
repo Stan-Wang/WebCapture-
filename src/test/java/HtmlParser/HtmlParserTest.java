@@ -29,7 +29,7 @@ public class HtmlParserTest {
 	public void testGetLinks() throws Exception {
 		System.setProperty("http.proxyHost", "127.0.0.1");
 		System.setProperty("http.proxyPort", "8087");
-		getLinks("http://184.154.128.244/htm_data/20/1411/1261982.html",
+		getLinks("http://m.58.com/zz/hezu/18710994264714x.shtml",
 				".*page.*");
 
 	}
